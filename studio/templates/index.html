@@ -31,7 +31,11 @@
               {% endif %}
               <span class="chip chip--kind">{{ p.kind }}</span>
               {% for s in p.stack %}<span class="chip">{{ s }}</span>{% endfor %}
+              {% if p.parent %}
+              <span class="chip">часть {{ p.repo }}</span>
+              {% else %}
               <span class="chip">{{ p.loc|sp }} строк</span>
+              {% endif %}
             </div>
           </div>
           <div class="row__shot">
