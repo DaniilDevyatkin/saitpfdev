@@ -216,6 +216,22 @@ META: dict[str, dict] = {
     },
 }
 
+# Порядок записей на витрине. Владелец задаёт его вручную: «03 — в самый конец,
+# 01 — предпоследним». Номера присваиваются по этому порядку, а не по репозиториям.
+ORDER = [
+    "drop001",
+    "igrushki",
+    "gen",
+    "ldlatte",
+    "perevezrev",
+    "kwork1",
+    "usmanova",
+    "maison",
+    "tattoo",
+    "approval",
+    "mayhem",
+]
+
 
 def walk(repo: Path):
     files, loc, by_lang, size = 0, 0, Counter(), 0
@@ -261,11 +277,14 @@ def main() -> None:
             stats[repo_name] = walk(repo_path)
 
     items = []
-    for slug, meta in META.items():
+    ordered = [(slug, META[slug]) for slug in ORDER if slug in META]
+    ordered += [(slug, meta) for slug, meta in META.items() if slug not in ORDER]
+    for position, (slug, meta) in enumerate(ordered, start=1):
         repo_name = meta["repo"]
         repo_path = REPOS / repo_name
         files, loc, by_lang, size = stats.get(repo_name, (0, 0, Counter(), 0))
-        item = {"slug": slug, **meta}
+        item = {"slug": slug, "num": f"{position:02d}", **meta}
+        item["num"] = f"{position:02d}"
         item.update(
             origin=git(repo_path, "remote", "get-url", "origin"),
             commit=git(repo_path, "rev-parse", "--short", "HEAD"),
@@ -277,7 +296,7 @@ def main() -> None:
         )
         items.append(item)
 
-    items.sort(key=lambda i: i["num"])
+    # порядок уже задан ORDER — сортировка не нужна
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({"projects": items}, ensure_ascii=False, indent=2), encoding="utf-8")
 

@@ -1,35 +1,8 @@
 {
   "projects": [
     {
-      "slug": "approval",
-      "num": "01",
-      "name": "Approval Service",
-      "kind": "Backend-сервис",
-      "brief": "Сервис согласования контента перед публикацией: заявки, решения approve/reject/cancel, аудит.",
-      "role": "Спроектировал API, модель данных и машину состояний; покрыл тестами.",
-      "accent": "#0540F2",
-      "repo": "TestovoeDevyatkin",
-      "live": "/svc/approval/docs",
-      "highlights": [
-        "Идемпотентность POST через Idempotency-Key",
-        "Права через X-Actions: read / create / decide / cancel",
-        "Alembic-миграции и SQLite/Postgres через DATABASE_URL"
-      ],
-      "origin": "git@github.com:DaniilDevyatkin/TestovoeDevyatkin.git",
-      "commit": "43b9453",
-      "last_commit": "2026-07-02",
-      "files": 30,
-      "loc": 1461,
-      "mb": 0.1,
-      "languages": {
-        "Python": 1236,
-        "Markdown": 214,
-        "YAML": 11
-      }
-    },
-    {
       "slug": "drop001",
-      "num": "02",
+      "num": "01",
       "name": "ДРОП / 001",
       "kind": "Каталог-витрина",
       "brief": "Секция каталога премиального стритвира: 8 товаров, тёмная сцена, акцент на съёмке.",
@@ -56,35 +29,8 @@
       }
     },
     {
-      "slug": "mayhem",
-      "num": "03",
-      "name": "Mayhem — Pony Paradise Tour",
-      "kind": "Промо-лендинг",
-      "brief": "Лендинг концерта: hero с афишей, блок о группе, три тарифа билетов, модалки.",
-      "role": "Свёл визуальный язык афиши, собрал сцены и модальные окна на чистом JS.",
-      "accent": "#8FBF12",
-      "repo": "BelberryTestovoe",
-      "live": "/p/mayhem/",
-      "highlights": [
-        "Одиннадцать CSS-слоёв: сцены, оверлеи, модалки",
-        "Модалки и тарифы на ванильном JS без зависимостей",
-        "Полоса прогресса скролла как навигационный акцент"
-      ],
-      "origin": "git@github.com:DaniilDevyatkin/BelberryTestovoe.git",
-      "commit": "22c405e",
-      "last_commit": "2026-07-08",
-      "files": 18,
-      "loc": 1328,
-      "mb": 8.0,
-      "languages": {
-        "CSS": 762,
-        "HTML": 327,
-        "JavaScript": 239
-      }
-    },
-    {
       "slug": "igrushki",
-      "num": "04",
+      "num": "02",
       "name": "Игрушечки",
       "kind": "Многопользовательское приложение",
       "brief": "Сетевые партии в шахматы, шашки, морской бой, дурака и пиксельбаттл: комнаты, рейтинги, чат.",
@@ -101,11 +47,11 @@
       "origin": "git@github.com:DaniilDevyatkin/Igrushki.git",
       "commit": "9987fad",
       "last_commit": "2026-07-21",
-      "files": 227,
-      "loc": 26124,
-      "mb": 289.0,
+      "files": 228,
+      "loc": 26212,
+      "mb": 289.3,
       "languages": {
-        "TypeScript": 13232,
+        "TypeScript": 13320,
         "JSON": 9541,
         "CSS": 1915,
         "JavaScript": 757,
@@ -114,7 +60,7 @@
     },
     {
       "slug": "gen",
-      "num": "05",
+      "num": "03",
       "name": "Генерация карточек",
       "kind": "Раздел приложения · заказ",
       "brief": "Два набора товаров — электроника и одежда: сетка карточек, превью и скачивание файлов.",
@@ -145,7 +91,7 @@
     },
     {
       "slug": "ldlatte",
-      "num": "06",
+      "num": "04",
       "name": "LD Latte",
       "kind": "Раздел приложения · заказ",
       "brief": "Капсула бренда: референсы съёмки, разбор кадров, карусели и презентация.",
@@ -176,7 +122,7 @@
     },
     {
       "slug": "perevezrev",
-      "num": "07",
+      "num": "05",
       "name": "ИП Переверзев",
       "kind": "Раздел приложения · заказ",
       "brief": "Карточки для бренда: четыре новые сетки и четыре старые карусели в одном экране.",
@@ -207,7 +153,7 @@
     },
     {
       "slug": "kwork1",
-      "num": "08",
+      "num": "06",
       "name": "ЗаказКВОРК №1",
       "kind": "Раздел приложения · заказ",
       "brief": "Карточки и слайды заказа с фриланс-биржи: две карусели и скачивание презентации.",
@@ -238,7 +184,7 @@
     },
     {
       "slug": "usmanova",
-      "num": "09",
+      "num": "07",
       "name": "Катя Усманова",
       "kind": "Лендинг (GetCourse)",
       "brief": "Реплика лендинга фитнес-тренера: hero, блок о тренере, социальное доказательство.",
@@ -264,7 +210,7 @@
     },
     {
       "slug": "maison",
-      "num": "10",
+      "num": "08",
       "name": "Maison Lumière Studio",
       "kind": "Сайт студии с бронированием",
       "brief": "Премиальная фотостудия: залы, бронирование слотов, отзывы, чат, админка и оплата.",
@@ -294,7 +240,7 @@
     },
     {
       "slug": "tattoo",
-      "num": "11",
+      "num": "09",
       "name": "TatuSait",
       "kind": "Сайт тату-студии",
       "brief": "Портфолио работ, мастера, запись на сеанс и прайс на удаление — FastAPI + React.",
@@ -311,15 +257,69 @@
       "origin": "git@github.com:DaniilDevyatkin/TatuSait.git",
       "commit": "81d6cfb",
       "last_commit": "2026-06-17",
-      "files": 39,
-      "loc": 5198,
-      "mb": 116.2,
+      "files": 43,
+      "loc": 5286,
+      "mb": 232.6,
       "languages": {
         "JSON": 2765,
-        "JavaScript": 1753,
+        "JavaScript": 1820,
         "Python": 514,
-        "CSS": 147,
-        "HTML": 19
+        "CSS": 148,
+        "HTML": 39
+      }
+    },
+    {
+      "slug": "approval",
+      "num": "10",
+      "name": "Approval Service",
+      "kind": "Backend-сервис",
+      "brief": "Сервис согласования контента перед публикацией: заявки, решения approve/reject/cancel, аудит.",
+      "role": "Спроектировал API, модель данных и машину состояний; покрыл тестами.",
+      "accent": "#0540F2",
+      "repo": "TestovoeDevyatkin",
+      "live": "/svc/approval/docs",
+      "highlights": [
+        "Идемпотентность POST через Idempotency-Key",
+        "Права через X-Actions: read / create / decide / cancel",
+        "Alembic-миграции и SQLite/Postgres через DATABASE_URL"
+      ],
+      "origin": "git@github.com:DaniilDevyatkin/TestovoeDevyatkin.git",
+      "commit": "43b9453",
+      "last_commit": "2026-07-02",
+      "files": 30,
+      "loc": 1461,
+      "mb": 0.1,
+      "languages": {
+        "Python": 1236,
+        "Markdown": 214,
+        "YAML": 11
+      }
+    },
+    {
+      "slug": "mayhem",
+      "num": "11",
+      "name": "Mayhem — Pony Paradise Tour",
+      "kind": "Промо-лендинг",
+      "brief": "Лендинг концерта: hero с афишей, блок о группе, три тарифа билетов, модалки.",
+      "role": "Свёл визуальный язык афиши, собрал сцены и модальные окна на чистом JS.",
+      "accent": "#8FBF12",
+      "repo": "BelberryTestovoe",
+      "live": "/p/mayhem/",
+      "highlights": [
+        "Одиннадцать CSS-слоёв: сцены, оверлеи, модалки",
+        "Модалки и тарифы на ванильном JS без зависимостей",
+        "Полоса прогресса скролла как навигационный акцент"
+      ],
+      "origin": "git@github.com:DaniilDevyatkin/BelberryTestovoe.git",
+      "commit": "22c405e",
+      "last_commit": "2026-07-08",
+      "files": 18,
+      "loc": 1328,
+      "mb": 8.0,
+      "languages": {
+        "CSS": 762,
+        "HTML": 327,
+        "JavaScript": 239
       }
     }
   ]
