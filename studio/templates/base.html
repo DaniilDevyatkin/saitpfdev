@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Платформа «Шесть» — портфолио Даниила Девяткина{% endblock %}</title>
+  <meta name="description" content="{% block description %}Шесть проектов Даниила Девяткина, сведённые в одну платформу: витрина, живые стенды и общий сервис согласования.{% endblock %}">
+  <meta name="theme-color" content="#f2efe9">
+  <link rel="stylesheet" href="/static/portal.css?v=6">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar__in">
+      <a class="brand" href="/"><span class="brand__mark"></span>Шесть</a>
+      <nav class="nav" aria-label="Разделы">
+        <a href="/#ledger">Реестр</a>
+        <a href="/#scheme">Платформа</a>
+        <a href="/#review">Согласование</a>
+        <a href="/#status">Статус</a>
+      </nav>
+      <span class="topbar__status">
+        <span class="dot {% if not all_live %}dot--off{% endif %}"></span>
+        <span id="live-counter">{{ live_count }}/{{ projects|length }} в сети</span>
+      </span>
+    </div>
+  </header>
+
+  {% block body %}{% endblock %}
+
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <div>
+        <div class="footer__mark">ШЕСТЬ</div>
+        <p>Платформа, в которую сведены шесть тестовых проектов. Портал, статические
+           лендинги, стенды приложений и сервис согласования работают на одном хосте.</p>
+        <p class="mono" style="color:#8b909a">Собрано {{ built_at }} · {{ totals.loc|sp }} строк кода</p>
+      </div>
+      <div>
+        <h3>Исходники</h3>
+        {% for p in projects %}
+          <p><a href="{{ p.github }}" target="_blank" rel="noopener">{{ p.repo }}</a></p>
+        {% endfor %}
+      </div>
+      <div>
+        <h3>Разделы</h3>
+        <p><a href="/#ledger">Реестр проектов</a></p>
+        <p><a href="/#scheme">Как устроена платформа</a></p>
+        <p><a href="/#review">Консоль согласования</a></p>
+        <p><a href="/#status">Статус компонентов</a></p>
+        <p><a href="/svc/approval/docs" target="_blank" rel="noopener">OpenAPI сервиса согласования</a></p>
+      </div>
+    </div>
+  </footer>
+  <script src="/static/portal.js?v=5" defer></script>
+</body>
+</html>

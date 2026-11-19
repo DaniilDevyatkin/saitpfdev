@@ -1,0 +1,176 @@
+{
+  "projects": [
+    {
+      "slug": "approval",
+      "num": "01",
+      "name": "Approval Service",
+      "kind": "Backend-сервис",
+      "brief": "Сервис согласования контента перед публикацией: заявки, решения approve/reject/cancel, аудит.",
+      "role": "Спроектировал API, модель данных и машину состояний; покрыл тестами.",
+      "accent": "#0540F2",
+      "live": "/svc/approval/docs",
+      "highlights": [
+        "Идемпотентность POST через Idempotency-Key",
+        "Права через X-Actions: read / create / decide / cancel",
+        "Alembic-миграции и SQLite/Postgres через DATABASE_URL"
+      ],
+      "repo": "TestovoeDevyatkin",
+      "origin": "git@github.com:DaniilDevyatkin/TestovoeDevyatkin.git",
+      "commit": "43b9453",
+      "last_commit": "2026-07-02",
+      "files": 30,
+      "loc": 1461,
+      "mb": 0.1,
+      "languages": {
+        "Python": 1236,
+        "Markdown": 214,
+        "YAML": 11
+      },
+      "tests": 1
+    },
+    {
+      "slug": "drop001",
+      "num": "02",
+      "name": "ДРОП / 001",
+      "kind": "Каталог-витрина",
+      "brief": "Секция каталога премиального стритвира: 8 товаров, тёмная сцена, акцент на съёмке.",
+      "role": "Собрал сетку, состояния карточек и входные анимации без библиотек.",
+      "accent": "#C8553D",
+      "live": "/p/drop001/",
+      "highlights": [
+        "Сетка 4×2 с адаптивом до одной колонки",
+        "Hover-состояние карточки: подъём, оверлей, кнопка",
+        "Отключение анимаций по prefers-reduced-motion"
+      ],
+      "repo": "TestovoeBug",
+      "origin": "git@github.com:DaniilDevyatkin/TestovoeBug.git",
+      "commit": "236987a",
+      "last_commit": "2026-07-05",
+      "files": 4,
+      "loc": 673,
+      "mb": 0.0,
+      "languages": {
+        "CSS": 416,
+        "HTML": 164,
+        "JavaScript": 60,
+        "Markdown": 33
+      },
+      "tests": 0
+    },
+    {
+      "slug": "mayhem",
+      "num": "03",
+      "name": "Mayhem — Pony Paradise Tour",
+      "kind": "Промо-лендинг",
+      "brief": "Лендинг концерта: hero с афишей, блок о группе, три тарифа билетов, модалки.",
+      "role": "Свёл визуальный язык афиши, собрал сцены и модальные окна на чистом JS.",
+      "accent": "#B9FF3C",
+      "live": "/p/mayhem/",
+      "highlights": [
+        "Одиннадцать CSS-слоёв: сцены, оверлеи, модалки",
+        "Модалки и тарифы на ванильном JS без зависимостей",
+        "Полоса прогресса скролла как навигационный акцент"
+      ],
+      "repo": "BelberryTestovoe",
+      "origin": "git@github.com:DaniilDevyatkin/BelberryTestovoe.git",
+      "commit": "22c405e",
+      "last_commit": "2026-07-08",
+      "files": 18,
+      "loc": 1328,
+      "mb": 8.0,
+      "languages": {
+        "CSS": 762,
+        "HTML": 327,
+        "JavaScript": 239
+      },
+      "tests": 0
+    },
+    {
+      "slug": "igrushki",
+      "num": "04",
+      "name": "Игрушечки",
+      "kind": "Многопользовательское веб-приложение",
+      "brief": "Сетевые партии в шахматы, шашки, морской бой, дурака и пиксельбаттл: комнаты, рейтинги, чат.",
+      "role": "Продукт целиком: Next.js-клиент, Fastify-API, WebSocket-каналы, SQLite, PWA.",
+      "accent": "#7B61FF",
+      "live": "/p/igrushki/",
+      "highlights": [
+        "WebSocket-каналы: партия, присутствие, пиксельбаттл",
+        "Пять игр с серверной валидацией правил",
+        "PWA, push-уведомления, модерация"
+      ],
+      "repo": "Igrushki",
+      "origin": "git@github.com:DaniilDevyatkin/Igrushki.git",
+      "commit": "9987fad",
+      "last_commit": "2026-07-21",
+      "files": 218,
+      "loc": 26112,
+      "mb": 288.4,
+      "languages": {
+        "TypeScript": 13226,
+        "JSON": 9535,
+        "CSS": 1915,
+        "JavaScript": 757,
+        "SQL": 316
+      },
+      "tests": 179
+    },
+    {
+      "slug": "kartochki",
+      "num": "05",
+      "name": "Карточки товаров",
+      "kind": "Веб-приложение + API",
+      "brief": "Генератор карточек товаров: каталог задач, превью, скачивание PNG, SVG-карточки.",
+      "role": "Свёл FastAPI-рендер картинок с React-интерфейсом и кэшем превью.",
+      "accent": "#0F8B8D",
+      "live": "/p/kartochki/",
+      "highlights": [
+        "Серверный рендер превью и SVG на Pillow",
+        "Кэш миниатюр 320 px под сетку",
+        "React + Vite на клиенте, FastAPI на сервере"
+      ],
+      "repo": "TestovoeKartochki",
+      "origin": "git@github.com:DaniilDevyatkin/TestovoeKartochki.git",
+      "commit": "31b7999",
+      "last_commit": "2026-08-08",
+      "files": 29,
+      "loc": 3528,
+      "mb": 174.8,
+      "languages": {
+        "JSON": 1871,
+        "CSS": 831,
+        "JavaScript": 600,
+        "Python": 139,
+        "Shell": 64
+      },
+      "tests": 0
+    },
+    {
+      "slug": "usmanova",
+      "num": "06",
+      "name": "Катя Усманова",
+      "kind": "Лендинг (GetCourse)",
+      "brief": "Реплика лендинга фитнес-тренера: hero, блок о тренере, социальное доказательство.",
+      "role": "Повторил вёрстку 1:1 по макету на Bootstrap + jQuery, собрал мобильную версию.",
+      "accent": "#D96C8A",
+      "live": "/p/usmanova/",
+      "highlights": [
+        "Три экрана, desktop и mobile, пиксель в пиксель",
+        "Bootstrap + jQuery + CMS-разметка GetCourse",
+        "Локальные изображения вместо внешних ссылок"
+      ],
+      "repo": "TestovoeUsmanova",
+      "origin": "git@github.com:DaniilDevyatkin/TestovoeUsmanova.git",
+      "commit": "64577b9",
+      "last_commit": "2026-07-06",
+      "files": 4,
+      "loc": 1051,
+      "mb": 11.3,
+      "languages": {
+        "HTML": 1049,
+        "Markdown": 2
+      },
+      "tests": 0
+    }
+  ]
+}
