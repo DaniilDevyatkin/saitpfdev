@@ -9,13 +9,6 @@
       <a class="back" href="/">← ко всем работам</a>
       <div class="phead__top" style="margin-top:18px">
         <span class="row__num" style="font-size:clamp(28px,4vw,52px); color:var(--accent); -webkit-text-stroke-color:var(--accent)">{{ p.num }}</span>
-        <span class="chip chip--kind">{{ p.kind }}</span>
-        {% if p.online %}
-        <span class="chip chip--live">в сети</span>
-        {% else %}
-        <span class="chip chip--off">стенд выключен</span>
-        {% endif %}
-        {% for s in p.stack %}<span class="chip">{{ s }}</span>{% endfor %}
       </div>
       <h1>{{ p.name }}</h1>
       <p class="phead__brief">{{ p.brief }}</p>

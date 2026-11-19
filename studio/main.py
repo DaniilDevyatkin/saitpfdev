@@ -55,6 +55,7 @@ def _plural(value, forms: str) -> str:
 
 
 templates.env.filters["plural"] = _plural
+templates.env.globals["css_version"] = int((config.STATIC_DIR / "style.css").stat().st_mtime)
 templates.env.globals["built_at"] = datetime.now(timezone.utc).strftime("%d.%m.%Y")
 
 _HEALTH_CACHE: dict[str, object] = {"at": 0.0, "data": None}

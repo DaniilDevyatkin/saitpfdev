@@ -111,6 +111,23 @@ button { font: inherit; color: inherit; }
     .topbar__link { font-size: 11px; }
 }
 
+
+/* Подпись-надзаголовок (используется на странице работы) */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+/* Секции страницы работы */
+.section { padding-block: clamp(24px, 4vw, 56px); }
+
+/* Ячейка строки реестра не должна раздуваться длинным названием */
+.row__main { min-width: 0; }
+
 /* ── Кнопки (страница проекта) ──────────────────────────────────── */
 
 .btn {
