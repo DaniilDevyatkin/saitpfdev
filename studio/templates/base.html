@@ -3,17 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Даниил Девяткин — шесть проектов{% endblock %}</title>
-  <meta name="description" content="{% block description %}Шесть тестовых проектов: лендинги, каталог, генератор карточек, сервис согласования и игровая платформа.{% endblock %}">
+  <title>{% block title %}Портфолио — Девяткин Даниил Дмитриевич{% endblock %}</title>
+  <meta name="description" content="{% block description %}Портфолио Даниила Девяткина: лендинги, каталоги, генератор карточек, сервис согласования, игровая платформа и сайты студий.{% endblock %}">
   <meta name="theme-color" content="#f2efe9">
-  <link rel="stylesheet" href="/static/style.css?v=1">
+  <link rel="stylesheet" href="/static/style.css?v=2">
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 </head>
 <body>
   <header class="topbar">
     <div class="wrap topbar__in">
-      <a class="brand" href="/"><span class="brand__mark"></span>Шесть</a>
-      <span class="topbar__count">{{ projects|length }} проектов · {{ built_at }}</span>
+      <a class="brand" href="/">
+        <span class="brand__mark"></span>
+        <span class="brand__text">
+          <span class="brand__kicker">Портфолио</span>
+          <span class="brand__name">Девяткин Даниил Дмитриевич</span>
+        </span>
+      </a>
+      <span class="topbar__count">{{ projects|length }} работ · {{ built_at }}</span>
       <a class="topbar__link" href="https://github.com/DaniilDevyatkin" target="_blank" rel="noopener">
         github.com/DaniilDevyatkin ↗
       </a>

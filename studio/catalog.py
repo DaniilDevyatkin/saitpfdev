@@ -1,8 +1,12 @@
-"""Каталог проектов платформы.
+"""Каталог записей витрины.
 
 Источник правды — docs/inventory.json, который собирает scripts/inventory.py
-из настоящих репозиториев. Каталог только обогащает эти данные ссылками,
-статусами и группировкой, поэтому цифры на витрине не расходятся с кодом.
+из настоящих репозиториев. Каталог только обогащает эти данные ссылками и
+статусами, поэтому цифры на витрине не расходятся с кодом.
+
+Одна запись витрины = один проект или один самостоятельный раздел приложения:
+четыре раздела «Карточек товаров» живут в одном репозитории, но это разные
+заказы, поэтому у них отдельные записи и свои адреса внутри стенда.
 """
 from __future__ import annotations
 
@@ -22,8 +26,6 @@ class Project:
     brief: str
     role: str
     accent: str
-    live: str
-    highlights: list[str]
     repo: str
     origin: str
     commit: str
@@ -31,9 +33,12 @@ class Project:
     files: int
     loc: int
     mb: float
+    live: str = ""
+    stand: str = ""
+    stand_path: str = "/"
+    parent: str = ""
+    highlights: list[str] = field(default_factory=list)
     languages: dict[str, int] = field(default_factory=dict)
-    tests: int = 0
-    stand: bool = False  # показать в iframe как живой стенд, а не как путь
     online: bool = True  # вычисляется при запросе: отвечает ли компонент
 
     @property
@@ -44,17 +49,26 @@ class Project:
     def stack(self) -> list[str]:
         return [name for name, _ in sorted(self.languages.items(), key=lambda kv: -kv[1])][:3]
 
+    @property
+    def is_stand(self) -> bool:
+        return bool(self.stand)
+
+    @property
+    def stand_port(self) -> int | None:
+        entry = config.STAND_PROJECTS.get(self.stand)
+        return entry[0] if entry else None
+
 
 def load() -> list[Project]:
     path: Path = config.DOCS_DIR / "inventory.json"
     if not path.exists():
         return []
     raw = json.loads(path.read_text(encoding="utf-8"))
+    known = set(Project.__dataclass_fields__)
     projects: list[Project] = []
     for item in raw.get("projects", []):
-        item = dict(item)
-        item["stand"] = item["slug"] in config.STAND_PROJECTS
-        projects.append(Project(**item))
+        clean = {k: v for k, v in item.items() if k in known}
+        projects.append(Project(**clean))
     return projects
 
 
@@ -66,10 +80,14 @@ def by_slug(slug: str) -> Project | None:
 
 
 def totals(projects: list[Project]) -> dict[str, int | float]:
+    """Итоги по уникальным репозиториям, а не по записям витрины."""
+    unique: dict[str, Project] = {}
+    for project in projects:
+        unique.setdefault(project.repo, project)
     return {
         "projects": len(projects),
-        "loc": sum(p.loc for p in projects),
-        "files": sum(p.files for p in projects),
-        "mb": round(sum(p.mb for p in projects), 1),
-        "tests": sum(p.tests for p in projects),
+        "repos": len(unique),
+        "loc": sum(p.loc for p in unique.values()),
+        "files": sum(p.files for p in unique.values()),
+        "mb": round(sum(p.mb for p in unique.values()), 1),
     }

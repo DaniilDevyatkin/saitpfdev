@@ -33,6 +33,14 @@ echo "→ карточки          http://0.0.0.0:8200"
 pids+=($!)
 
 if [[ -x "$NODE_BIN/node" ]]; then
+  echo "→ maison lumière    http://0.0.0.0:8300"
+  ( cd "$ROOT/repos/maison-lumiere-studio" && \
+    PATH="$NODE_BIN:$PATH" PORT=8300 NODE_ENV=development \
+    DATABASE_URL=mongodb://127.0.0.1:27017/maison_lumiere \
+    JWT_SECRET="${JWT_SECRET:-dev-secret}" \
+    node server.js >"$ROOT/logs/maison.log" 2>&1 ) &
+  pids+=($!)
+
   echo "→ игрушечки web     http://0.0.0.0:3100"
   ( cd "$ROOT/repos/Igrushki/.next/standalone" && \
     PATH="$NODE_BIN:$PATH" PORT=3100 HOSTNAME=0.0.0.0 NODE_ENV=production \
@@ -50,6 +58,16 @@ else
   echo "! Node 22 не найден в $NODE_BIN — стенд «Игрушечек» пропущен"
 fi
 
+echo "→ tatusait           http://0.0.0.0:8400"
+( cd "$ROOT/repos/TatuSait/backend" && \
+  MONGO_URI=mongodb://127.0.0.1:27017 \
+  IMAGES_DIR=../frontend/public/images FRONTEND_DIR=frontend \
+  ALLOWED_ORIGINS="http://192.168.51.81:8400,http://127.0.0.1:8400" \
+  "$ROOT/.venv/bin/uvicorn" main:app --host 0.0.0.0 --port 8400 \
+  >"$ROOT/logs/tattoo.log" 2>&1 ) &
+pids+=($!)
+
 echo
-echo "Готово. Портал: http://127.0.0.1:8110  (Ctrl+C — остановить)"
+echo "Готово. Витрина: http://127.0.0.1:8110  (Ctrl+C — остановить)"
+echo "MongoDB нужна для стендов Maison и TatuSait: systemctl --user start mongo-local"
 wait

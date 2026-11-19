@@ -49,7 +49,8 @@ def main() -> None:
         lines.append(f"- **{p['name']}**: {langs or '—'}")
     lines += ["", "## Как запускается каждый проект", ""]
     for p in projects:
-        lines.append(f"- **{p['name']}** — {p['live']}")
+        where = p.get("live") or f"стенд {p.get('stand', '')}{p.get('stand_path', '/')}"
+        lines.append(f"- **{p['name']}** — {where}")
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"записано {OUT}")
 

@@ -8,13 +8,13 @@
       "brief": "Сервис согласования контента перед публикацией: заявки, решения approve/reject/cancel, аудит.",
       "role": "Спроектировал API, модель данных и машину состояний; покрыл тестами.",
       "accent": "#0540F2",
+      "repo": "TestovoeDevyatkin",
       "live": "/svc/approval/docs",
       "highlights": [
         "Идемпотентность POST через Idempotency-Key",
         "Права через X-Actions: read / create / decide / cancel",
         "Alembic-миграции и SQLite/Postgres через DATABASE_URL"
       ],
-      "repo": "TestovoeDevyatkin",
       "origin": "git@github.com:DaniilDevyatkin/TestovoeDevyatkin.git",
       "commit": "43b9453",
       "last_commit": "2026-07-02",
@@ -25,8 +25,7 @@
         "Python": 1236,
         "Markdown": 214,
         "YAML": 11
-      },
-      "tests": 1
+      }
     },
     {
       "slug": "drop001",
@@ -36,13 +35,13 @@
       "brief": "Секция каталога премиального стритвира: 8 товаров, тёмная сцена, акцент на съёмке.",
       "role": "Собрал сетку, состояния карточек и входные анимации без библиотек.",
       "accent": "#C8553D",
+      "repo": "TestovoeBug",
       "live": "/p/drop001/",
       "highlights": [
         "Сетка 4×2 с адаптивом до одной колонки",
         "Hover-состояние карточки: подъём, оверлей, кнопка",
         "Отключение анимаций по prefers-reduced-motion"
       ],
-      "repo": "TestovoeBug",
       "origin": "git@github.com:DaniilDevyatkin/TestovoeBug.git",
       "commit": "236987a",
       "last_commit": "2026-07-05",
@@ -54,8 +53,7 @@
         "HTML": 164,
         "JavaScript": 60,
         "Markdown": 33
-      },
-      "tests": 0
+      }
     },
     {
       "slug": "mayhem",
@@ -64,14 +62,14 @@
       "kind": "Промо-лендинг",
       "brief": "Лендинг концерта: hero с афишей, блок о группе, три тарифа билетов, модалки.",
       "role": "Свёл визуальный язык афиши, собрал сцены и модальные окна на чистом JS.",
-      "accent": "#B9FF3C",
+      "accent": "#8FBF12",
+      "repo": "BelberryTestovoe",
       "live": "/p/mayhem/",
       "highlights": [
         "Одиннадцать CSS-слоёв: сцены, оверлеи, модалки",
         "Модалки и тарифы на ванильном JS без зависимостей",
         "Полоса прогресса скролла как навигационный акцент"
       ],
-      "repo": "BelberryTestovoe",
       "origin": "git@github.com:DaniilDevyatkin/BelberryTestovoe.git",
       "commit": "22c405e",
       "last_commit": "2026-07-08",
@@ -82,84 +80,177 @@
         "CSS": 762,
         "HTML": 327,
         "JavaScript": 239
-      },
-      "tests": 0
+      }
     },
     {
       "slug": "igrushki",
       "num": "04",
       "name": "Игрушечки",
-      "kind": "Многопользовательское веб-приложение",
+      "kind": "Многопользовательское приложение",
       "brief": "Сетевые партии в шахматы, шашки, морской бой, дурака и пиксельбаттл: комнаты, рейтинги, чат.",
       "role": "Продукт целиком: Next.js-клиент, Fastify-API, WebSocket-каналы, SQLite, PWA.",
       "accent": "#7B61FF",
-      "live": "/p/igrushki/",
+      "repo": "Igrushki",
+      "stand": "igrushki",
+      "stand_path": "/",
       "highlights": [
         "WebSocket-каналы: партия, присутствие, пиксельбаттл",
         "Пять игр с серверной валидацией правил",
         "PWA, push-уведомления, модерация"
       ],
-      "repo": "Igrushki",
       "origin": "git@github.com:DaniilDevyatkin/Igrushki.git",
       "commit": "9987fad",
       "last_commit": "2026-07-21",
-      "files": 218,
-      "loc": 26112,
-      "mb": 288.4,
+      "files": 227,
+      "loc": 26124,
+      "mb": 289.0,
       "languages": {
-        "TypeScript": 13226,
-        "JSON": 9535,
+        "TypeScript": 13232,
+        "JSON": 9541,
         "CSS": 1915,
         "JavaScript": 757,
         "SQL": 316
-      },
-      "tests": 179
+      }
     },
     {
-      "slug": "kartochki",
+      "slug": "gen",
       "num": "05",
-      "name": "Карточки товаров",
-      "kind": "Веб-приложение + API",
-      "brief": "Генератор карточек товаров: каталог задач, превью, скачивание PNG, SVG-карточки.",
-      "role": "Свёл FastAPI-рендер картинок с React-интерфейсом и кэшем превью.",
+      "name": "Генерация карточек",
+      "kind": "Раздел приложения · заказ",
+      "brief": "Два набора товаров — электроника и одежда: сетка карточек, превью и скачивание файлов.",
+      "role": "Серверный рендер, миниатюры и галерея с загрузкой на клиенте.",
       "accent": "#0F8B8D",
-      "live": "/p/kartochki/",
-      "highlights": [
-        "Серверный рендер превью и SVG на Pillow",
-        "Кэш миниатюр 320 px под сетку",
-        "React + Vite на клиенте, FastAPI на сервере"
-      ],
       "repo": "TestovoeKartochki",
+      "stand": "kartochki",
+      "stand_path": "/#/",
+      "parent": "TestovoeKartochki",
+      "highlights": [
+        "Две задачи — два набора карточек",
+        "Скачивание PNG одной кнопкой",
+        "Миниатюры 320 px под сетку"
+      ],
       "origin": "git@github.com:DaniilDevyatkin/TestovoeKartochki.git",
       "commit": "31b7999",
       "last_commit": "2026-08-08",
-      "files": 29,
-      "loc": 3528,
-      "mb": 174.8,
+      "files": 33,
+      "loc": 3601,
+      "mb": 175.0,
       "languages": {
-        "JSON": 1871,
-        "CSS": 831,
-        "JavaScript": 600,
+        "JSON": 1813,
+        "CSS": 832,
+        "JavaScript": 712,
         "Python": 139,
         "Shell": 64
-      },
-      "tests": 0
+      }
+    },
+    {
+      "slug": "ldlatte",
+      "num": "06",
+      "name": "LD Latte",
+      "kind": "Раздел приложения · заказ",
+      "brief": "Капсула бренда: референсы съёмки, разбор кадров, карусели и презентация.",
+      "role": "Собрал разбор референсов и галерею с лайтбоксом.",
+      "accent": "#C9A227",
+      "repo": "TestovoeKartochki",
+      "stand": "kartochki",
+      "stand_path": "/#/ldlatte",
+      "parent": "TestovoeKartochki",
+      "highlights": [
+        "Текстовые блоки-обоснования по каждому кадру",
+        "Карусели с лайтбоксом",
+        "Выгрузка презентации"
+      ],
+      "origin": "git@github.com:DaniilDevyatkin/TestovoeKartochki.git",
+      "commit": "31b7999",
+      "last_commit": "2026-08-08",
+      "files": 33,
+      "loc": 3601,
+      "mb": 175.0,
+      "languages": {
+        "JSON": 1813,
+        "CSS": 832,
+        "JavaScript": 712,
+        "Python": 139,
+        "Shell": 64
+      }
+    },
+    {
+      "slug": "perevezrev",
+      "num": "07",
+      "name": "ИП Переверзев",
+      "kind": "Раздел приложения · заказ",
+      "brief": "Карточки для бренда: четыре новые сетки и четыре старые карусели в одном экране.",
+      "role": "Свёл восемь наборов изображений в две группы с лайтбоксом.",
+      "accent": "#7A5230",
+      "repo": "TestovoeKartochki",
+      "stand": "kartochki",
+      "stand_path": "/#/perevezrev",
+      "parent": "TestovoeKartochki",
+      "highlights": [
+        "Сравнение «новое / старое» на одном экране",
+        "Четыре сетки и четыре карусели",
+        "Лайтбокс с клавиатурой"
+      ],
+      "origin": "git@github.com:DaniilDevyatkin/TestovoeKartochki.git",
+      "commit": "31b7999",
+      "last_commit": "2026-08-08",
+      "files": 33,
+      "loc": 3601,
+      "mb": 175.0,
+      "languages": {
+        "JSON": 1813,
+        "CSS": 832,
+        "JavaScript": 712,
+        "Python": 139,
+        "Shell": 64
+      }
+    },
+    {
+      "slug": "kwork1",
+      "num": "08",
+      "name": "ЗаказКВОРК №1",
+      "kind": "Раздел приложения · заказ",
+      "brief": "Карточки и слайды заказа с фриланс-биржи: две карусели и скачивание презентации.",
+      "role": "Собрал выдачу заказа: карточки, слайды, скачивание.",
+      "accent": "#4B6FA8",
+      "repo": "TestovoeKartochki",
+      "stand": "kartochki",
+      "stand_path": "/#/kwork1",
+      "parent": "TestovoeKartochki",
+      "highlights": [
+        "Две карусели: карточки и слайды",
+        "Скачивание файлов по клику",
+        "Адаптив до 360 px"
+      ],
+      "origin": "git@github.com:DaniilDevyatkin/TestovoeKartochki.git",
+      "commit": "31b7999",
+      "last_commit": "2026-08-08",
+      "files": 33,
+      "loc": 3601,
+      "mb": 175.0,
+      "languages": {
+        "JSON": 1813,
+        "CSS": 832,
+        "JavaScript": 712,
+        "Python": 139,
+        "Shell": 64
+      }
     },
     {
       "slug": "usmanova",
-      "num": "06",
+      "num": "09",
       "name": "Катя Усманова",
       "kind": "Лендинг (GetCourse)",
       "brief": "Реплика лендинга фитнес-тренера: hero, блок о тренере, социальное доказательство.",
       "role": "Повторил вёрстку 1:1 по макету на Bootstrap + jQuery, собрал мобильную версию.",
-      "accent": "#D96C8A",
+      "accent": "#C05A78",
+      "repo": "TestovoeUsmanova",
       "live": "/p/usmanova/",
       "highlights": [
         "Три экрана, desktop и mobile, пиксель в пиксель",
         "Bootstrap + jQuery + CMS-разметка GetCourse",
         "Локальные изображения вместо внешних ссылок"
       ],
-      "repo": "TestovoeUsmanova",
       "origin": "git@github.com:DaniilDevyatkin/TestovoeUsmanova.git",
       "commit": "64577b9",
       "last_commit": "2026-07-06",
@@ -169,8 +260,67 @@
       "languages": {
         "HTML": 1049,
         "Markdown": 2
-      },
-      "tests": 0
+      }
+    },
+    {
+      "slug": "maison",
+      "num": "10",
+      "name": "Maison Lumière Studio",
+      "kind": "Сайт студии с бронированием",
+      "brief": "Премиальная фотостудия: залы, бронирование слотов, отзывы, чат, админка и оплата.",
+      "role": "Полный продукт: Express + MongoDB, React-клиент, JWT-админка, интеграция ЮKassa.",
+      "accent": "#A67C52",
+      "repo": "maison-lumiere-studio",
+      "stand": "maison",
+      "stand_path": "/",
+      "highlights": [
+        "Бронирование по слотам с проверкой пересечений",
+        "Админка: заявки, клиенты, финансы, уборка",
+        "Helmet, rate-limit, mongo-sanitize, hpp"
+      ],
+      "origin": "git@github.com:DaniilDevyatkin/maison-lumiere-studio.git",
+      "commit": "ce2e560",
+      "last_commit": "2026-06-13",
+      "files": 111,
+      "loc": 8835,
+      "mb": 43.3,
+      "languages": {
+        "JSON": 4221,
+        "JavaScript": 3678,
+        "CSS": 776,
+        "Markdown": 133,
+        "HTML": 27
+      }
+    },
+    {
+      "slug": "tattoo",
+      "num": "11",
+      "name": "TatuSait",
+      "kind": "Сайт тату-студии",
+      "brief": "Портфолио работ, мастера, запись на сеанс и прайс на удаление — FastAPI + React.",
+      "role": "Собрал API с сидами и клиент на React + Tailwind, ограничил частоту запросов.",
+      "accent": "#2F5D50",
+      "repo": "TatuSait",
+      "stand": "tattoo",
+      "stand_path": "/",
+      "highlights": [
+        "Работы, мастера и удаление — три раздела каталога",
+        "Форма записи с валидацией на сервере",
+        "Security-headers и rate-limit через slowapi"
+      ],
+      "origin": "git@github.com:DaniilDevyatkin/TatuSait.git",
+      "commit": "81d6cfb",
+      "last_commit": "2026-06-17",
+      "files": 39,
+      "loc": 5198,
+      "mb": 116.2,
+      "languages": {
+        "JSON": 2765,
+        "JavaScript": 1753,
+        "Python": 514,
+        "CSS": 147,
+        "HTML": 19
+      }
     }
   ]
 }

@@ -31,8 +31,9 @@ def test_portal_renders_all_projects(client):
     response = client.get("/")
     assert response.status_code == 200
     html = response.text
-    assert html.count('class="row"') == 6
-    for name in ("Approval Service", "Игрушечки", "Карточки товаров", "Катя Усманова"):
+    assert html.count('class="row"') == 11
+    for name in ("Approval Service", "Игрушечки", "LD Latte", "ИП Переверзев",
+                 "ЗаказКВОРК №1", "Maison Lumière Studio", "TatuSait"):
         assert name in html
 
 
@@ -68,7 +69,9 @@ def test_static_landing_is_mounted(client, slug):
 
 
 @pytest.mark.parametrize(
-    "slug", ["approval", "drop001", "mayhem", "igrushki", "kartochki", "usmanova"]
+    "slug",
+    ["approval", "drop001", "mayhem", "igrushki", "gen", "ldlatte", "perevezrev",
+     "kwork1", "usmanova", "maison", "tattoo"],
 )
 def test_every_project_page_answers(client, slug):
     response = client.get(f"/project/{slug}")
@@ -89,9 +92,10 @@ def test_path_traversal_is_blocked(client):
 
 def test_catalog_api_shape(client):
     data = client.get("/api/catalog").json()
-    assert data["totals"]["projects"] == 6
-    assert data["totals"]["loc"] > 30_000
-    assert len(data["projects"]) == 6
+    assert data["totals"]["projects"] == 11
+    assert data["totals"]["repos"] == 8
+    assert data["totals"]["loc"] > 45_000
+    assert len(data["projects"]) == 11
     for item in data["projects"]:
         for key in ("slug", "num", "name", "stack", "loc", "github", "live"):
             assert key in item
@@ -101,9 +105,9 @@ def test_catalog_api_shape(client):
 def test_health_reports_every_component(client):
     data = client.get("/api/health?force=true").json()
     names = [component["name"] for component in data["components"]]
-    assert "Портал и реестр" in names
+    assert "Витрина" in names
     assert "Сервис согласования" in names
-    assert data["total"] == len(data["components"]) >= 8
+    assert data["total"] == len(data["components"]) >= 10
     assert 0 <= data["live"] <= data["total"]
 
 
@@ -168,3 +172,23 @@ def test_approval_cancel_flow(client):
 
 def test_review_page_is_gone(client):
     assert client.get("/review").status_code == 404
+
+
+def test_kartochki_sections_are_separate_entries(client):
+    """Четыре раздела «Карточек» — четыре записи со своими адресами внутри стенда."""
+    catalog = {p["slug"]: p for p in client.get("/api/catalog").json()["projects"]}
+    sections = ["gen", "ldlatte", "perevezrev", "kwork1"]
+    paths = set()
+    for slug in sections:
+        item = catalog[slug]
+        assert item["parent"] == "TestovoeKartochki"
+        assert item["stand"] == "kartochki"
+        paths.add(item["stand_path"])
+        assert client.get(f"/project/{slug}").status_code == 200
+    assert len(paths) == 4, "у разделов должны быть разные адреса"
+
+
+def test_brand_is_personal_portfolio(client):
+    html = client.get("/").text
+    assert "Девяткин Даниил Дмитриевич" in html
+    assert ">Шесть<" not in html

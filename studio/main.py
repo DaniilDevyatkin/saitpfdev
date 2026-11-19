@@ -1,24 +1,23 @@
-"""Платформа «Шесть» — единая точка входа для шести проектов.
+"""Витрина портфолио: одна точка входа для всех проектов.
 
 Один процесс отдаёт:
-  * портал с реестром проектов            (/)
-  * страницы проектов                      (/project/<slug>)
-  * статические лендинги                   (/p/mayhem, /p/drop001, /p/usmanova)
-  * сводный health-check                   (/api/health)
-  * каталог в JSON                         (/api/catalog)
-  * сервис согласования из проекта №1      (/svc/approval)
+  * витрину с записями                  (/)
+  * страницы записей                     (/project/<slug>)
+  * статические лендинги                 (/p/mayhem, /p/drop001, /p/usmanova)
+  * сводный health-check                 (/api/health)
+  * каталог в JSON                       (/api/catalog)
+  * сервис согласования из проекта №1    (/svc/approval)
 """
 from __future__ import annotations
 
 import asyncio
-import json
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -37,15 +36,40 @@ def _sp(value: int | float) -> str:
 
 
 templates.env.filters["sp"] = _sp
+
+
+def _plural(value, forms: str) -> str:
+    """«1 работа / 2 работы / 11 работ» — форма выбирается по числу."""
+    try:
+        n = abs(int(value))
+    except (TypeError, ValueError):
+        return str(value)
+    one, few, many = (forms.split(",") + ["", "", ""])[:3]
+    if n % 10 == 1 and n % 100 != 11:
+        word = one
+    elif 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14:
+        word = few
+    else:
+        word = many
+    return f"{n} {word}"
+
+
+templates.env.filters["plural"] = _plural
 templates.env.globals["built_at"] = datetime.now(timezone.utc).strftime("%d.%m.%Y")
 
 _HEALTH_CACHE: dict[str, object] = {"at": 0.0, "data": None}
+
+STATIC_LABELS = {
+    "mayhem": "Лендинг Mayhem",
+    "drop001": "Каталог ДРОП / 001",
+    "usmanova": "Лендинг Кати Усмановой",
+}
 
 
 async def _probe(client: httpx.AsyncClient, url: str) -> tuple[bool, int | None]:
     started = time.perf_counter()
     try:
-        res = await client.get(url, timeout=2.0)
+        res = await client.get(url, timeout=2.5)
         ms = int((time.perf_counter() - started) * 1000)
         return res.status_code < 400, ms
     except Exception:
@@ -53,7 +77,7 @@ async def _probe(client: httpx.AsyncClient, url: str) -> tuple[bool, int | None]
 
 
 async def collect_health(force: bool = False) -> dict:
-    """Проверяет все компоненты платформы. Кэш — 5 секунд."""
+    """Проверяет компоненты витрины. Кэш — 5 секунд."""
     now = time.time()
     if not force and _HEALTH_CACHE["data"] and now - float(_HEALTH_CACHE["at"]) < 5:
         return _HEALTH_CACHE["data"]  # type: ignore[return-value]
@@ -61,17 +85,11 @@ async def collect_health(force: bool = False) -> dict:
     components: list[dict] = []
 
     # Статические лендинги: достаточно наличия index.html в каталоге проекта.
-    labels = {
-        "mayhem": "Лендинг Mayhem",
-        "drop001": "Каталог ДРОП / 001",
-        "usmanova": "Лендинг Кати Усмановой",
-    }
     for slug, path in config.STATIC_PROJECTS.items():
-        index = Path(path) / "index.html"
-        ok = index.is_file()
+        ok = (Path(path) / "index.html").is_file()
         components.append(
             {
-                "name": labels[slug],
+                "name": STATIC_LABELS[slug],
                 "path": f"/p/{slug}/",
                 "role": "статика",
                 "ok": ok,
@@ -79,40 +97,35 @@ async def collect_health(force: bool = False) -> dict:
             }
         )
 
-    # Внешние стенды приложений.
-    stand_labels = {
-        "kartochki": ("Стенд «Карточки»", "приложение"),
-        "igrushki": ("Стенд «Игрушечки»", "приложение"),
-    }
+    # Стенды приложений: по одному HTTP-запросу на стенд.
     async with httpx.AsyncClient() as client:
-        probes = []
-        for slug, (port, health_path) in config.STAND_PROJECTS.items():
-            probes.append(
-                _probe(client, f"http://127.0.0.1:{port}{health_path}"),
-            )
+        probes = [
+            _probe(client, f"http://127.0.0.1:{port}{health_path}")
+            for port, health_path in config.STAND_PROJECTS.values()
+        ]
         probes.append(_probe(client, f"http://127.0.0.1:{config.IGRUSHKI_API_PORT}/api/health"))
         results = await asyncio.gather(*probes, return_exceptions=True)
 
-    for (slug, (port, _)), result in zip(config.STAND_PROJECTS.items(), results):
+    for (stand, (port, _)), result in zip(config.STAND_PROJECTS.items(), results):
         ok, ms = result if isinstance(result, tuple) else (False, None)
-        name, role = stand_labels[slug]
         components.append(
             {
-                "name": name,
+                "name": config.STAND_TITLES[stand],
                 "path": f":{port}",
-                "role": role,
+                "role": "приложение",
                 "ok": bool(ok),
                 "ms": ms,
             }
         )
 
+    api_ok, api_ms = results[-1] if isinstance(results[-1], tuple) else (False, None)
     components.append(
         {
             "name": "API «Игрушечек»",
             "path": f":{config.IGRUSHKI_API_PORT}",
             "role": "Fastify + WS",
-            "ok": bool(results[-1][0]) if isinstance(results[-1], tuple) else False,
-            "ms": results[-1][1] if isinstance(results[-1], tuple) else None,
+            "ok": bool(api_ok),
+            "ms": api_ms,
         }
     )
     components.append(
@@ -125,7 +138,7 @@ async def collect_health(force: bool = False) -> dict:
         }
     )
     components.append(
-        {"name": "Портал и реестр", "path": "/", "role": "портал", "ok": True, "ms": 0}
+        {"name": "Витрина", "path": "/", "role": "портал", "ok": True, "ms": 0}
     )
 
     data = {
@@ -141,7 +154,8 @@ async def collect_health(force: bool = False) -> dict:
 def create_app() -> FastAPI:
     config.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    app = FastAPI(title="Платформа «Шесть»", version="1.0.0", docs_url=None, redoc_url=None)
+    app = FastAPI(title="Портфолио Девяткин Даниил Дмитриевич", version="2.0.0",
+                  docs_url=None, redoc_url=None)
 
     approval_bridge.mount(app)
 
@@ -161,6 +175,38 @@ def create_app() -> FastAPI:
         if request.url.path.startswith(("/static/", "/p/")):
             response.headers.setdefault("Cache-Control", "public, max-age=3600")
         return response
+
+    def _is_live(project: catalog.Project, health: dict) -> bool:
+        ok_paths = {c["path"]: c["ok"] for c in health["components"]}
+        if project.stand:
+            port = project.stand_port
+            return bool(port and ok_paths.get(f":{port}", False))
+        if project.slug == "approval":
+            return approval_bridge.MOUNTED
+        return ok_paths.get(f"/p/{project.slug}/", False)
+
+    def _open_url(project: catalog.Project, host: str) -> str:
+        if project.stand and project.stand_port:
+            return f"http://{host}:{project.stand_port}{project.stand_path}"
+        if project.slug == "approval":
+            return "/svc/approval/docs"
+        return project.live or f"/p/{project.slug}/"
+
+    def _unit(project: catalog.Project) -> str:
+        return {
+            "kartochki": "kartochki-stand",
+            "igrushki": "igrushki-web",
+            "maison": "maison-stand",
+            "tattoo": "tattoo-stand",
+        }.get(project.stand, "portfolio-platform")
+
+    def _context(request: Request, projects: list, health: dict) -> dict:
+        return {
+            "request": request,
+            "projects": projects,
+            "totals": catalog.totals(projects),
+            "port": config.PORTAL_PORT,
+        }
 
     @app.get("/healthz")
     async def healthz():
@@ -194,28 +240,14 @@ def create_app() -> FastAPI:
                     "last_commit": p.last_commit,
                     "github": p.github,
                     "live_path": p.live,
+                    "stand": p.stand,
+                    "stand_path": p.stand_path,
+                    "parent": p.parent,
                     "live": p.online,
                 }
                 for p in projects
             ],
         }
-
-    def _project_context(request: Request, projects, health):
-        return {
-            "request": request,
-            "projects": projects,
-            "totals": catalog.totals(projects),
-            "port": config.PORTAL_PORT,
-        }
-
-    def _is_live(project, health) -> bool:
-        ok_paths = {c["path"]: c["ok"] for c in health["components"]}
-        if project.slug in config.STAND_PROJECTS:
-            port = config.STAND_PROJECTS[project.slug][0]
-            return ok_paths.get(f":{port}", False)
-        if project.slug == "approval":
-            return approval_bridge.MOUNTED
-        return ok_paths.get(f"/p/{project.slug}/", False)
 
     @app.get("/", response_class=HTMLResponse)
     async def portal(request: Request):
@@ -223,13 +255,12 @@ def create_app() -> FastAPI:
         health = await collect_health()
         for project in projects:
             project.online = _is_live(project, health)
-        return templates.TemplateResponse(request, "index.html", _project_context(request, projects, health))
+        return templates.TemplateResponse(request, "index.html", _context(request, projects, health))
 
     @app.get("/project/{slug}", response_class=HTMLResponse)
     async def project_page(slug: str, request: Request):
-        project = catalog.by_slug(slug)
-        if project is None:
-            raise HTTPException(status_code=404, detail="Проект не найден в реестре")
+        if catalog.by_slug(slug) is None:
+            raise HTTPException(status_code=404, detail="Запись не найдена")
         projects = catalog.load()
         health = await collect_health()
         for p in projects:
@@ -237,19 +268,14 @@ def create_app() -> FastAPI:
         project = next(p for p in projects if p.slug == slug)
 
         host = request.headers.get("host", "").split(":")[0] or "127.0.0.1"
-        if project.slug in config.STAND_PROJECTS:
-            port = config.STAND_PROJECTS[project.slug][0]
-            open_url = f"http://{host}:{port}/"
-            unit = "kartochki-stand" if project.slug == "kartochki" else "igrushki-web"
-        elif project.slug == "approval":
-            open_url = "/svc/approval/docs"
-            unit = "portfolio-platform"
-        else:
-            open_url = f"/p/{project.slug}/"
-            unit = "portfolio-platform"
-
-        ctx = _project_context(request, projects, health)
-        ctx.update({"p": project, "open_url": open_url, "unit": unit})
+        ctx = _context(request, projects, health)
+        ctx.update(
+            {
+                "p": project,
+                "open_url": _open_url(project, host),
+                "unit": _unit(project),
+            }
+        )
         return templates.TemplateResponse(request, "project.html", ctx)
 
     return app

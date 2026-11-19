@@ -18,11 +18,13 @@ DOCS_DIR = BASE_DIR / "docs"
 # Куда платформа пишет свою SQLite-базу сервиса согласования.
 APPROVAL_DB = DATA_DIR / "approval.db"
 
-# Порт платформы и порты внешних стендов, которые она показывает.
+# Порт витрины и порты стендов, которые она показывает.
 PORTAL_PORT = int(os.environ.get("PORTAL_PORT", "8110"))
 KARTOCHKI_PORT = int(os.environ.get("KARTOCHKI_PORT", "8200"))
 IGRUSHKI_WEB_PORT = int(os.environ.get("IGRUSHKI_WEB_PORT", "3100"))
 IGRUSHKI_API_PORT = int(os.environ.get("IGRUSHKI_API_PORT", "3301"))
+MAISON_PORT = int(os.environ.get("MAISON_PORT", "8300"))
+TATTOO_PORT = int(os.environ.get("TATTOO_PORT", "8400"))
 
 # Статические лендинги: slug -> каталог с index.html.
 STATIC_PROJECTS = {
@@ -31,16 +33,26 @@ STATIC_PROJECTS = {
     "usmanova": REPOS_DIR / "TestovoeUsmanova",
 }
 
-# Стенды приложений: slug -> (порт, путь проверки здоровья).
+# Стенды приложений: имя стенда -> (порт, путь проверки здоровья).
+# Один стенд может обслуживать несколько записей витрины — так устроены
+# четыре раздела «Карточек товаров».
 STAND_PROJECTS = {
     "kartochki": (KARTOCHKI_PORT, "/api/tasks"),
     "igrushki": (IGRUSHKI_WEB_PORT, "/"),
+    "maison": (MAISON_PORT, "/"),
+    "tattoo": (TATTOO_PORT, "/"),
+}
+
+STAND_TITLES = {
+    "kartochki": "Стенд «Карточки товаров»",
+    "igrushki": "Стенд «Игрушечки»",
+    "maison": "Стенд Maison Lumière",
+    "tattoo": "Стенд TatuSait",
 }
 
 GITHUB_ORG = "DaniilDevyatkin"
 
+
 def database_url() -> str:
     """URL для сервиса согласования. По умолчанию — файл в data/."""
-    return os.environ.get(
-        "DATABASE_URL", f"sqlite:///{DATA_DIR / 'approval.db'}"
-    )
+    return os.environ.get("DATABASE_URL", f"sqlite:///{DATA_DIR / 'approval.db'}")

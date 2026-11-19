@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Инвентаризация проектов-источников.
 
-Проходит по клонам в ../repos, считает файлы/строки/размер, определяет стек
-и записывает итог в docs/inventory.json. Портал читает этот файл как источник
-правды о проектах, поэтому цифры на витрине всегда совпадают с содержимым
-репозиториев, а не набиты руками.
+Проходит по клонам в ../repos, считает файлы/строки/размер, читает последний
+коммит и пишет docs/inventory.json. Витрина читает этот файл как источник правды,
+поэтому цифры на ней совпадают с содержимым репозиториев.
+
+Одна запись витрины = один проект или один самостоятельный раздел приложения:
+четыре раздела «Карточек товаров» живут в одном репозитории, но показаны
+отдельными записями, потому что это разные заказы.
 """
 from __future__ import annotations
 
@@ -34,15 +37,15 @@ BINARY_EXT = {
     ".woff2", ".ttf", ".otf", ".ico", ".pdf", ".zip", ".glb", ".mp3",
 }
 
-META = {
-    "TestovoeDevyatkin": {
-        "slug": "approval",
+META: dict[str, dict] = {
+    "approval": {
         "num": "01",
         "name": "Approval Service",
         "kind": "Backend-сервис",
         "brief": "Сервис согласования контента перед публикацией: заявки, решения approve/reject/cancel, аудит.",
         "role": "Спроектировал API, модель данных и машину состояний; покрыл тестами.",
         "accent": "#0540F2",
+        "repo": "TestovoeDevyatkin",
         "live": "/svc/approval/docs",
         "highlights": [
             "Идемпотентность POST через Idempotency-Key",
@@ -50,14 +53,14 @@ META = {
             "Alembic-миграции и SQLite/Postgres через DATABASE_URL",
         ],
     },
-    "TestovoeBug": {
-        "slug": "drop001",
+    "drop001": {
         "num": "02",
         "name": "ДРОП / 001",
         "kind": "Каталог-витрина",
         "brief": "Секция каталога премиального стритвира: 8 товаров, тёмная сцена, акцент на съёмке.",
         "role": "Собрал сетку, состояния карточек и входные анимации без библиотек.",
         "accent": "#C8553D",
+        "repo": "TestovoeBug",
         "live": "/p/drop001/",
         "highlights": [
             "Сетка 4×2 с адаптивом до одной колонки",
@@ -65,14 +68,14 @@ META = {
             "Отключение анимаций по prefers-reduced-motion",
         ],
     },
-    "BelberryTestovoe": {
-        "slug": "mayhem",
+    "mayhem": {
         "num": "03",
         "name": "Mayhem — Pony Paradise Tour",
         "kind": "Промо-лендинг",
         "brief": "Лендинг концерта: hero с афишей, блок о группе, три тарифа билетов, модалки.",
         "role": "Свёл визуальный язык афиши, собрал сцены и модальные окна на чистом JS.",
-        "accent": "#B9FF3C",
+        "accent": "#8FBF12",
+        "repo": "BelberryTestovoe",
         "live": "/p/mayhem/",
         "highlights": [
             "Одиннадцать CSS-слоёв: сцены, оверлеи, модалки",
@@ -80,49 +83,135 @@ META = {
             "Полоса прогресса скролла как навигационный акцент",
         ],
     },
-    "Igrushki": {
-        "slug": "igrushki",
+    "igrushki": {
         "num": "04",
         "name": "Игрушечки",
-        "kind": "Многопользовательское веб-приложение",
+        "kind": "Многопользовательское приложение",
         "brief": "Сетевые партии в шахматы, шашки, морской бой, дурака и пиксельбаттл: комнаты, рейтинги, чат.",
         "role": "Продукт целиком: Next.js-клиент, Fastify-API, WebSocket-каналы, SQLite, PWA.",
         "accent": "#7B61FF",
-        "live": "/p/igrushki/",
+        "repo": "Igrushki",
+        "stand": "igrushki",
+        "stand_path": "/",
         "highlights": [
             "WebSocket-каналы: партия, присутствие, пиксельбаттл",
             "Пять игр с серверной валидацией правил",
             "PWA, push-уведомления, модерация",
         ],
     },
-    "TestovoeKartochki": {
-        "slug": "kartochki",
+    "gen": {
         "num": "05",
-        "name": "Карточки товаров",
-        "kind": "Веб-приложение + API",
-        "brief": "Генератор карточек товаров: каталог задач, превью, скачивание PNG, SVG-карточки.",
-        "role": "Свёл FastAPI-рендер картинок с React-интерфейсом и кэшем превью.",
+        "name": "Генерация карточек",
+        "kind": "Раздел приложения · заказ",
+        "brief": "Два набора товаров — электроника и одежда: сетка карточек, превью и скачивание файлов.",
+        "role": "Серверный рендер, миниатюры и галерея с загрузкой на клиенте.",
         "accent": "#0F8B8D",
-        "live": "/p/kartochki/",
+        "repo": "TestovoeKartochki",
+        "stand": "kartochki",
+        "stand_path": "/#/",
+        "parent": "TestovoeKartochki",
         "highlights": [
-            "Серверный рендер превью и SVG на Pillow",
-            "Кэш миниатюр 320 px под сетку",
-            "React + Vite на клиенте, FastAPI на сервере",
+            "Две задачи — два набора карточек",
+            "Скачивание PNG одной кнопкой",
+            "Миниатюры 320 px под сетку",
         ],
     },
-    "TestovoeUsmanova": {
-        "slug": "usmanova",
+    "ldlatte": {
         "num": "06",
+        "name": "LD Latte",
+        "kind": "Раздел приложения · заказ",
+        "brief": "Капсула бренда: референсы съёмки, разбор кадров, карусели и презентация.",
+        "role": "Собрал разбор референсов и галерею с лайтбоксом.",
+        "accent": "#C9A227",
+        "repo": "TestovoeKartochki",
+        "stand": "kartochki",
+        "stand_path": "/#/ldlatte",
+        "parent": "TestovoeKartochki",
+        "highlights": [
+            "Текстовые блоки-обоснования по каждому кадру",
+            "Карусели с лайтбоксом",
+            "Выгрузка презентации",
+        ],
+    },
+    "perevezrev": {
+        "num": "07",
+        "name": "ИП Переверзев",
+        "kind": "Раздел приложения · заказ",
+        "brief": "Карточки для бренда: четыре новые сетки и четыре старые карусели в одном экране.",
+        "role": "Свёл восемь наборов изображений в две группы с лайтбоксом.",
+        "accent": "#7A5230",
+        "repo": "TestovoeKartochki",
+        "stand": "kartochki",
+        "stand_path": "/#/perevezrev",
+        "parent": "TestovoeKartochki",
+        "highlights": [
+            "Сравнение «новое / старое» на одном экране",
+            "Четыре сетки и четыре карусели",
+            "Лайтбокс с клавиатурой",
+        ],
+    },
+    "kwork1": {
+        "num": "08",
+        "name": "ЗаказКВОРК №1",
+        "kind": "Раздел приложения · заказ",
+        "brief": "Карточки и слайды заказа с фриланс-биржи: две карусели и скачивание презентации.",
+        "role": "Собрал выдачу заказа: карточки, слайды, скачивание.",
+        "accent": "#4B6FA8",
+        "repo": "TestovoeKartochki",
+        "stand": "kartochki",
+        "stand_path": "/#/kwork1",
+        "parent": "TestovoeKartochki",
+        "highlights": [
+            "Две карусели: карточки и слайды",
+            "Скачивание файлов по клику",
+            "Адаптив до 360 px",
+        ],
+    },
+    "usmanova": {
+        "num": "09",
         "name": "Катя Усманова",
         "kind": "Лендинг (GetCourse)",
         "brief": "Реплика лендинга фитнес-тренера: hero, блок о тренере, социальное доказательство.",
         "role": "Повторил вёрстку 1:1 по макету на Bootstrap + jQuery, собрал мобильную версию.",
-        "accent": "#D96C8A",
+        "accent": "#C05A78",
+        "repo": "TestovoeUsmanova",
         "live": "/p/usmanova/",
         "highlights": [
             "Три экрана, desktop и mobile, пиксель в пиксель",
             "Bootstrap + jQuery + CMS-разметка GetCourse",
             "Локальные изображения вместо внешних ссылок",
+        ],
+    },
+    "maison": {
+        "num": "10",
+        "name": "Maison Lumière Studio",
+        "kind": "Сайт студии с бронированием",
+        "brief": "Премиальная фотостудия: залы, бронирование слотов, отзывы, чат, админка и оплата.",
+        "role": "Полный продукт: Express + MongoDB, React-клиент, JWT-админка, интеграция ЮKassa.",
+        "accent": "#A67C52",
+        "repo": "maison-lumiere-studio",
+        "stand": "maison",
+        "stand_path": "/",
+        "highlights": [
+            "Бронирование по слотам с проверкой пересечений",
+            "Админка: заявки, клиенты, финансы, уборка",
+            "Helmet, rate-limit, mongo-sanitize, hpp",
+        ],
+    },
+    "tattoo": {
+        "num": "11",
+        "name": "TatuSait",
+        "kind": "Сайт тату-студии",
+        "brief": "Портфолио работ, мастера, запись на сеанс и прайс на удаление — FastAPI + React.",
+        "role": "Собрал API с сидами и клиент на React + Tailwind, ограничил частоту запросов.",
+        "accent": "#2F5D50",
+        "repo": "TatuSait",
+        "stand": "tattoo",
+        "stand_path": "/",
+        "highlights": [
+            "Работы, мастера и удаление — три раздела каталога",
+            "Форма записи с валидацией на сервере",
+            "Security-headers и rate-limit через slowapi",
         ],
     },
 }
@@ -165,37 +254,40 @@ def git(repo: Path, *args: str) -> str:
 
 
 def main() -> None:
+    stats: dict[str, tuple[int, int, Counter, int]] = {}
+    for repo_name in {meta["repo"] for meta in META.values()}:
+        repo_path = REPOS / repo_name
+        if repo_path.exists():
+            stats[repo_name] = walk(repo_path)
+
     items = []
-    for dirname, meta in META.items():
-        repo = REPOS / dirname
-        if not repo.exists():
-            continue
-        files, loc, by_lang, size = walk(repo)
-        item = dict(meta)
+    for slug, meta in META.items():
+        repo_name = meta["repo"]
+        repo_path = REPOS / repo_name
+        files, loc, by_lang, size = stats.get(repo_name, (0, 0, Counter(), 0))
+        item = {"slug": slug, **meta}
         item.update(
-            repo=dirname,
-            origin=git(repo, "remote", "get-url", "origin"),
-            commit=git(repo, "rev-parse", "--short", "HEAD"),
-            last_commit=git(repo, "log", "-1", "--format=%cs"),
+            origin=git(repo_path, "remote", "get-url", "origin"),
+            commit=git(repo_path, "rev-parse", "--short", "HEAD"),
+            last_commit=git(repo_path, "log", "-1", "--format=%cs"),
             files=files,
             loc=loc,
             mb=round(size / 1024 / 1024, 1),
             languages=dict(by_lang.most_common(5)),
-            tests=sum(1 for p in repo.rglob("test_*.py")) + sum(
-                1 for p in repo.rglob("*.test.ts*")
-            ) if "node_modules" not in str(repo) else 0,
         )
         items.append(item)
 
     items.sort(key=lambda i: i["num"])
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(
-        json.dumps({"projects": items}, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    total_loc = sum(i["loc"] for i in items)
-    print(f"проектов: {len(items)}, строк кода: {total_loc}")
+    OUT.write_text(json.dumps({"projects": items}, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Итоги считаются по уникальным репозиториям: разделы одного приложения
+    # не должны раздувать общий объём кода.
+    total_loc = sum(stats[r][1] for r in stats)
+    print(f"записей: {len(items)}, репозиториев: {len(stats)}, строк кода: {total_loc}")
     for i in items:
-        print(f"  {i['num']} {i['slug']:<12} {i['loc']:>6} строк  {i['files']:>4} файлов  {i['mb']:>6} МБ")
+        marker = "↳" if i.get("parent") else " "
+        print(f" {marker} {i['num']} {i['slug']:<12} {i['repo']:<22} {i['loc']:>6} строк")
 
 
 if __name__ == "__main__":
