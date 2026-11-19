@@ -34,19 +34,25 @@ def test_portal_renders_all_projects(client):
     assert html.count('class="row"') == 6
     for name in ("Approval Service", "Игрушечки", "Карточки товаров", "Катя Усманова"):
         assert name in html
-    assert "Согласование" in html
+
+
+def test_removed_blocks_are_gone(client):
+    """Пульт, схема, консоль согласования, статус и подвал удалены из витрины."""
+    html = client.get("/").text
+    for gone in ("Пульт", "Платформа</span>", "Очередь заявок", "Status", "status-table", "footer"):
+        assert gone not in html, f"лишний блок вернулся: {gone}"
 
 
 def test_portal_assets_are_served(client):
     html = client.get("/").text
-    for asset in ("/static/portal.css", "/static/portal.js", "/static/favicon.svg"):
+    for asset in ("/static/style.css", "/static/favicon.svg"):
         assert asset in html
         assert client.get(asset).status_code == 200
 
 
 def test_fonts_are_local(client):
     """Портал обязан рисоваться без интернета: шрифты лежат в static/fonts."""
-    css = client.get("/static/portal.css").text
+    css = client.get("/static/style.css").text
     assert "fonts/fonts.css" in css
     local = client.get("/static/fonts/fonts.css")
     assert local.status_code == 200
@@ -160,7 +166,5 @@ def test_approval_cancel_flow(client):
     assert cancelled.json()["status"] == "cancelled"
 
 
-def test_review_page_redirect(client):
-    response = client.get("/review", follow_redirects=False)
-    assert response.status_code == 307
-    assert response.headers["location"].endswith("/#review")
+def test_review_page_is_gone(client):
+    assert client.get("/review").status_code == 404

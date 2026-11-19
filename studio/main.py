@@ -205,9 +205,6 @@ def create_app() -> FastAPI:
             "request": request,
             "projects": projects,
             "totals": catalog.totals(projects),
-            "health": health["components"],
-            "live_count": sum(1 for p in projects if p.online),
-            "all_live": all(p.online for p in projects),
             "port": config.PORTAL_PORT,
         }
 
@@ -254,13 +251,6 @@ def create_app() -> FastAPI:
         ctx = _project_context(request, projects, health)
         ctx.update({"p": project, "open_url": open_url, "unit": unit})
         return templates.TemplateResponse(request, "project.html", ctx)
-
-    @app.get("/review")
-    async def review_redirect():
-        # Консоль живёт секцией на главной — прямой адрес ведёт туда.
-        from fastapi.responses import RedirectResponse
-
-        return RedirectResponse(url="/#review", status_code=307)
 
     return app
 

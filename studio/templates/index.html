@@ -3,67 +3,25 @@
 {% block body %}
 <main>
   <section class="hero">
-    <div class="wrap hero__grid">
-      <div>
-        <p class="kicker">Портфолио · тестовые задания · 2026</p>
-        <h1>Шесть брифов.<br><span class="nw"><em>Одна</em> платформа.</span></h1>
-        <p class="hero__lead">
-          Шесть проектов лежали в шести репозиториях: лендинг концерта, каталог стритвира,
-          реплика лендинга тренера, генератор карточек, сервис согласования и многопользовательская
-          игровая платформа. Здесь они собраны в одну точку входа — с живыми стендами,
-          общей навигацией и настоящим API, который эта страница использует сама.
-        </p>
-        <div class="hero__actions">
-          <a class="btn" href="#ledger">Открыть реестр <span aria-hidden="true">→</span></a>
-          <a class="btn btn--ghost" href="#scheme">Как устроено</a>
-        </div>
-        <dl class="hero__foot">
-          <div><dt>Автор</dt><dd>Даниил Девяткин</dd></div>
-          <div><dt>Репозитории</dt><dd><a href="https://github.com/DaniilDevyatkin" target="_blank" rel="noopener">github.com/DaniilDevyatkin</a></dd></div>
-          <div><dt>Собрано</dt><dd>{{ built_at }}</dd></div>
-        </dl>
-      </div>
-
-      <aside class="pult" aria-label="Сводные метрики">
-        <div class="pult__head"><span>Пульт</span><span id="pult-clock">—</span></div>
-        <div class="pult__row"><span>Проектов в реестре</span><b>{{ totals.projects }}</b></div>
-        <div class="pult__row"><span>Строк кода</span><b>{{ totals.loc|sp }}</b></div>
-        <div class="pult__row"><span>Файлов исходников</span><b>{{ totals.files|sp }}</b></div>
-        <div class="pult__row"><span>Тестов в репозиториях</span><b>{{ totals.tests }}</b></div>
-        <div class="pult__row"><span>Стендов в сети</span><b id="pult-live">{{ live_count }}/{{ projects|length }}</b></div>
-        <div class="pult__bar">
-          <div class="pult__bar-label">Объём по проектам, строки</div>
-          <div class="stackbar" role="img" aria-label="Распределение строк кода по проектам">
-            {% for p in projects %}
-            <span style="width: {{ (p.loc / totals.loc * 100)|round(1) }}%; background: {{ p.accent }}"
-                  title="{{ p.name }} — {{ p.loc|sp }} строк"></span>
-            {% endfor %}
-          </div>
-          <div class="pult__legend">
-            {% for p in projects %}
-            <span style="--dotc: {{ p.accent }}">{{ p.num }} · {{ p.loc|sp }}</span>
-            {% endfor %}
-          </div>
-        </div>
-      </aside>
+    <div class="wrap">
+      <p class="kicker">Портфолио · тестовые задания · 2026</p>
+      <h1>Шесть брифов.<br><span class="nw"><em>Одна</em> платформа.</span></h1>
+      <p class="hero__lead">
+        Лендинги, каталог, генератор карточек, сервис согласования и игровая платформа —
+        шесть разных задач, собранных в одну витрину. У каждой записи есть бриф,
+        решение и живые исходники.
+      </p>
     </div>
   </section>
 
-  <section class="section section--rule" id="ledger">
+  <section class="list">
     <div class="wrap">
-      <div class="shead">
-        <span class="shead__label">Реестр</span>
-        <span class="shead__line"></span>
-        <span class="shead__count">{{ totals.projects }} записей · {{ built_at }}</span>
-        <h2>Каждая запись — задача, решение и ссылка на живой результат</h2>
-      </div>
-
       <div class="ledger">
         {% for p in projects %}
         <a class="row" href="/project/{{ p.slug }}" style="--accent: {{ p.accent }}">
           <span class="row__num">{{ p.num }}</span>
           <div class="row__main">
-            <h3 class="row__name">{{ p.name }} <span class="row__arrow" aria-hidden="true">→</span></h3>
+            <h2 class="row__name">{{ p.name }} <span class="row__arrow" aria-hidden="true">→</span></h2>
             <p class="row__brief">{{ p.brief }}</p>
             <div class="row__meta">
               {% if p.online %}
@@ -81,149 +39,6 @@
           </div>
         </a>
         {% endfor %}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--dark" id="scheme">
-    <div class="wrap">
-      <div class="shead">
-        <span class="shead__label">Платформа</span>
-        <span class="shead__line"></span>
-        <span class="shead__count">один хост · один вход</span>
-        <h2>Проекты не переписаны — они подключены</h2>
-      </div>
-
-      <div class="scheme">
-        <div class="scheme__col">
-          <div class="scheme__title">Источники</div>
-          {% for p in projects %}
-          <div class="scheme__item"><span>{{ p.name }}</span><i>{{ p.repo }}</i></div>
-          {% endfor %}
-        </div>
-        <div class="scheme__arrow" aria-hidden="true">→</div>
-        <div class="scheme__col scheme__col--core">
-          <div class="scheme__title">Платформа «Шесть»</div>
-          <div class="scheme__item"><span>Портал и реестр</span><i>/</i></div>
-          <div class="scheme__item"><span>Статические лендинги</span><i>/p/*</i></div>
-          <div class="scheme__item"><span>Стенды приложений</span><i>:8200 · :3100</i></div>
-          <div class="scheme__item"><span>Сервис согласования</span><i>/svc/approval</i></div>
-          <div class="scheme__item"><span>Сводный health-check</span><i>/api/health</i></div>
-        </div>
-        <div class="scheme__arrow" aria-hidden="true">→</div>
-        <div class="scheme__col">
-          <div class="scheme__title">Браузер</div>
-          <div class="scheme__item"><span>Порт {{ port }}</span><i>http</i></div>
-          <div class="scheme__item"><span>Один дизайн-язык</span><i>DESIGN.md</i></div>
-          <div class="scheme__item"><span>Согласование публикаций</span><i>live API</i></div>
-        </div>
-      </div>
-
-      <div class="notes">
-        <div class="note">
-          <h3>Статика без прокси</h3>
-          <p>Три лендинга отдаются файлами прямо из платформы: пути <span class="mono">/p/mayhem/</span>,
-             <span class="mono">/p/drop001/</span>, <span class="mono">/p/usmanova/</span>.
-             Никакой сборки и никакой зависимости от внешних CDN для самого портала.</p>
-        </div>
-        <div class="note">
-          <h3>Приложения — стендами</h3>
-          <p>Там, где нужен собственный сервер (React + FastAPI у карточек, Next.js + Fastify
-             у «Игрушечек»), проект поднят отдельным процессом и встроен в страницу проекта.
-             Так работают WebSocket, cookie и нативные модули — без хирургии над исходниками.</p>
-        </div>
-        <div class="note">
-          <h3>API, а не картинка</h3>
-          <p>Сервис согласования из первого проекта подключён в тот же процесс и работает
-             по-настоящему: консоль ниже создаёт заявки, согласует и отклоняет их через
-             <span class="mono">/svc/approval/api/v1</span>.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="review">
-    <div class="wrap">
-      <div class="shead">
-        <span class="shead__label">Согласование</span>
-        <span class="shead__line"></span>
-        <span class="shead__count">живой сервис · SQLite</span>
-        <h2>Публикация проекта проходит через сервис из реестра</h2>
-      </div>
-
-      <div class="review">
-        <form class="panel" id="review-form">
-          <div class="panel__head"><span>Новая заявка</span><span class="hint-line">POST /approval-requests</span></div>
-          <div class="panel__body">
-            <div class="field">
-              <label for="f-project">Проект</label>
-              <select id="f-project" name="project">
-                {% for p in projects %}
-                <option value="{{ p.repo }}|{{ p.slug }}">{{ p.num }} · {{ p.name }}</option>
-                {% endfor %}
-              </select>
-              <div class="field__hint">Какой репозиторий выводим на публикацию.</div>
-            </div>
-            <div class="field">
-              <label for="f-title">Заголовок заявки</label>
-              <input id="f-title" name="title" maxlength="500" placeholder="Например: вывести витрину на главную">
-              <div class="field__hint">Короткая формулировка, что именно согласуем.</div>
-            </div>
-            <div class="field">
-              <label for="f-desc">Описание</label>
-              <textarea id="f-desc" name="description" rows="3" maxlength="2000"
-                        placeholder="Что меняется и что проверить ревьюеру"></textarea>
-              <div class="field__hint">Необязательно, до 2000 символов.</div>
-            </div>
-            <button class="btn" type="submit" id="f-submit">Отправить на согласование</button>
-            <p class="hint-line" id="form-status" role="status" aria-live="polite" style="margin-top:10px"></p>
-          </div>
-        </form>
-
-        <div class="panel">
-          <div class="panel__head">
-            <span>Очередь заявок</span>
-            <span class="hint-line"><span id="req-count">0</span> · workspace portfolio</span>
-          </div>
-          <div class="panel__body" id="req-list">
-            <div class="empty">Заявок пока нет. Создайте первую слева — она появится здесь
-              через <span class="mono">GET /api/v1/workspaces/portfolio/approval-requests</span>.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--rule" id="status">
-    <div class="wrap">
-      <div class="shead">
-        <span class="shead__label">Статус</span>
-        <span class="shead__line"></span>
-        <span class="shead__count" id="status-time">проверено сейчас</span>
-        <h2>Что именно работает прямо в эту секунду</h2>
-      </div>
-
-      <div class="tbl">
-      <table class="status-table">
-        <thead>
-          <tr><th>Компонент</th><th>Путь</th><th>Роль</th><th>Отклик</th><th>Состояние</th></tr>
-        </thead>
-        <tbody id="status-body">
-          {% for c in health %}
-          <tr>
-            <td>{{ c.name }}</td>
-            <td class="mono">{{ c.path }}</td>
-            <td class="mono">{{ c.role }}</td>
-            <td class="mono">{% if c.ms is not none %}{{ c.ms }} мс{% else %}—{% endif %}</td>
-            <td>
-              <span class="state {{ 'state--ok' if c.ok else 'state--off' }}">
-                <span class="dot {{ '' if c.ok else 'dot--off' }}"></span>{{ 'работает' if c.ok else 'недоступен' }}
-              </span>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
       </div>
     </div>
   </section>
