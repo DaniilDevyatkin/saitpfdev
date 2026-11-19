@@ -2,18 +2,6 @@
 
 {% block body %}
 <main>
-  <section class="hero">
-    <div class="wrap">
-      <p class="kicker">Портфолио · тестовые задания и заказы · 2026</p>
-      <h1>{{ totals.projects|plural('работа,работы,работ') }}.<br><span class="nw"><em>Одна</em> витрина.</span></h1>
-      <p class="hero__lead">
-        Лендинги, каталоги, генератор карточек, сервис согласования, игровая платформа
-        и сайты студий — работы из восьми репозиториев, собранные в одну витрину.
-        У каждой записи есть бриф, решение и живые исходники.
-      </p>
-    </div>
-  </section>
-
   <section class="list">
     <div class="wrap">
       <div class="ledger">
@@ -23,20 +11,6 @@
           <div class="row__main">
             <h2 class="row__name">{{ p.name }} <span class="row__arrow" aria-hidden="true">→</span></h2>
             <p class="row__brief">{{ p.brief }}</p>
-            <div class="row__meta">
-              {% if p.online %}
-              <span class="chip chip--live">в сети</span>
-              {% else %}
-              <span class="chip chip--off">стенд выключен</span>
-              {% endif %}
-              <span class="chip chip--kind">{{ p.kind }}</span>
-              {% for s in p.stack %}<span class="chip">{{ s }}</span>{% endfor %}
-              {% if p.parent %}
-              <span class="chip">часть {{ p.repo }}</span>
-              {% else %}
-              <span class="chip">{{ p.loc|sp }} строк</span>
-              {% endif %}
-            </div>
           </div>
           <div class="row__shot">
             <img src="/static/shots/{{ p.slug }}.jpg" alt="Снимок проекта {{ p.name }}" loading="lazy">

@@ -42,6 +42,9 @@ def test_removed_blocks_are_gone(client):
     html = client.get("/").text
     for gone in ("Пульт", "Платформа</span>", "Очередь заявок", "Status", "status-table", "footer"):
         assert gone not in html, f"лишний блок вернулся: {gone}"
+    # Второй заход чистки: герой, счётчик работ и плашки-чипы в строках.
+    for gone in ("class=\"hero\"", "topbar__count", "row__meta", "chip", "11 работ"):
+        assert gone not in html, f"лишний блок вернулся: {gone}"
 
 
 def test_portal_assets_are_served(client):
