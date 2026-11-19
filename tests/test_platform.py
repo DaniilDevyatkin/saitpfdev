@@ -79,7 +79,19 @@ def test_static_landing_is_mounted(client, slug):
 def test_every_project_page_answers(client, slug):
     response = client.get(f"/project/{slug}")
     assert response.status_code == 200, slug
-    assert "Исходники на GitHub" in response.text
+    html = response.text
+    assert "← ко всем работам" in html
+
+
+def test_project_pages_have_no_extra_blocks(client):
+    """На страницах работ не должно быть сайдбара, кнопок и подсказок."""
+    for slug in ("approval", "drop001", "mayhem", "igrushki", "gen", "ldlatte",
+                 "perevezrev", "kwork1", "usmanova", "maison", "tattoo"):
+        html = client.get(f"/project/{slug}").text
+        for gone in ("Моя роль", "Что смотреть", "Языки", "ИСХОДНИКИ",
+                     "Открыть стенд", "Работа открыта внутри", "class=\"facts\"",
+                     "class=\"panel\""):
+            assert gone not in html, f"{slug}: остался блок «{gone}»"
 
 
 def test_unknown_project_returns_404(client):

@@ -12,82 +12,25 @@
       </div>
       <h1>{{ p.name }}</h1>
       <p class="phead__brief">{{ p.brief }}</p>
-      <div class="phead__actions">
-        {% if p.online %}
-        <a class="btn" href="{{ open_url }}" target="_blank" rel="noopener">Открыть {{ 'стенд' if p.stand else 'страницу' }} ↗</a>
-        {% endif %}
-        <a class="btn btn--ghost" href="{{ p.github }}" target="_blank" rel="noopener">Исходники на GitHub ↗</a>
-      </div>
     </div>
   </section>
 
   <section class="section" style="padding-top:0">
-    <div class="wrap grid2">
-      <div>
-        {% if p.online %}
-        <div class="frame">
-          <div class="frame__bar">
-            <span></span>
-            <span class="mono">{{ open_url }}</span>
-          </div>
-          <iframe src="{{ open_url }}" title="{{ p.name }}" loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="wrap">
+      {% if p.online %}
+      <div class="frame">
+        <div class="frame__bar">
+          <span></span>
+          <span class="mono">{{ open_url }}</span>
         </div>
-        <p class="hint-line" style="margin-top:10px">
-          Работа открыта внутри витрины. Если браузер блокирует встраивание — нажмите
-          «Открыть {{ 'стенд' if p.stand else 'страницу' }}»: адрес откроется отдельной вкладкой.
-        </p>
-        {% else %}
-        <div class="frame">
-          <div class="frame__bar"><span style="background:var(--bad)"></span><span class="mono">стенд не запущен</span></div>
-          <div class="frame__fallback">
-            <h3>Живой стенд сейчас выключен</h3>
-            <p>Работа поднимается отдельным процессом. Включите его командой
-               <span class="mono">systemctl --user start {{ unit }}</span> — страница обновится
-               сама при следующей проверке статуса.</p>
-            <a class="btn btn--ghost" href="{{ p.github }}" target="_blank" rel="noopener">Посмотреть код ↗</a>
-          </div>
-        </div>
-        {% endif %}
+        <iframe src="{{ open_url }}" title="{{ p.name }}" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-
-      <aside>
-        <div class="facts">
-          <div class="facts__row"><span>Репозиторий</span><b class="mono">{{ p.repo }}</b></div>
-          <div class="facts__row"><span>Коммит</span><b>{{ p.commit }}</b></div>
-          <div class="facts__row"><span>Последнее изменение</span><b>{{ p.last_commit }}</b></div>
-          <div class="facts__row"><span>Строк кода</span><b>{{ p.loc|sp }}</b></div>
-          <div class="facts__row"><span>Файлов</span><b>{{ p.files|sp }}</b></div>
-          <div class="facts__row"><span>Объём</span><b>{{ p.mb }} МБ</b></div>
-        </div>
-        {% if p.parent %}
-        <p class="hint-line" style="margin-top:8px">
-          Цифры — по репозиторию <span class="mono">{{ p.repo }}</span> целиком: это один
-          проект из четырёх разделов.
-        </p>
-        {% endif %}
-
-        <div class="panel" style="margin-top:16px">
-          <div class="panel__head"><span>Моя роль</span></div>
-          <div class="panel__body" style="font-size:14.5px; color:var(--ink-soft)">{{ p.role }}</div>
-        </div>
-
-        <div class="panel" style="margin-top:16px">
-          <div class="panel__head"><span>Что смотреть</span></div>
-          <ul class="ul">
-            {% for h in p.highlights %}<li>{{ h }}</li>{% endfor %}
-          </ul>
-        </div>
-
-        <div class="panel" style="margin-top:16px">
-          <div class="panel__head"><span>Языки</span></div>
-          <ul class="ul">
-            {% for lang, lines in p.languages.items() %}
-            <li>{{ lang }} — {{ lines|sp }} строк</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </aside>
+      {% else %}
+      <div class="frame">
+        <div class="frame__bar"><span style="background:var(--bad)"></span><span class="mono">стенд не запущен</span></div>
+      </div>
+      {% endif %}
     </div>
   </section>
 
