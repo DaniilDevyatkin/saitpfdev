@@ -1,0 +1,26 @@
+[Unit]
+Description=Обратный SSH-туннель на VDS для devyatkinprod.ru (порт 18443 → локальный 8110)
+After=network-online.target portfolio-platform.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -N \
+    -o BatchMode=yes \
+    -o ExitOnForwardFailure=yes \
+    -o ServerAliveInterval=30 \
+    -o ServerAliveCountMax=3 \
+    -o StrictHostKeyChecking=accept-new \
+    -i /home/fun/.ssh/id_ed25519_vds \
+    -R 127.0.0.1:18443:127.0.0.1:8110 \
+    -R 127.0.0.1:13100:127.0.0.1:3100 \
+    -R 127.0.0.1:13301:127.0.0.1:3301 \
+    -R 127.0.0.1:18200:127.0.0.1:8200 \
+    -R 127.0.0.1:18300:127.0.0.1:8300 \
+    -R 127.0.0.1:18400:127.0.0.1:8400 \
+    root@104.128.130.176
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=Портфолио Девяткина — витрина работ (порт 8110)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/fun/projects/portfolio-platform
+ExecStart=/home/fun/projects/portfolio-platform/.venv/bin/uvicorn studio.main:app --host 0.0.0.0 --port 8110 --proxy-headers
+Restart=always
+RestartSec=3
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target

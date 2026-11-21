@@ -1,0 +1,13 @@
+[Unit]
+Description=Продление сертификата Let's Encrypt для devyatkinprod.ru (DNS-01 reg.ru)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/fun/.local/certbot-venv/bin/certbot renew \
+    --config-dir /home/fun/.local/certbot \
+    --work-dir /home/fun/.local/certbot/work \
+    --logs-dir /home/fun/.local/certbot/logs \
+    --deploy-hook /home/fun/projects/portfolio-platform/scripts/deploy-cert.sh \
+    --quiet
