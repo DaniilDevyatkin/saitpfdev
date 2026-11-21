@@ -59,6 +59,10 @@ class Project:
         return entry[0] if entry else None
 
 
+# Работы, которые показываются в конце списка независимо от порядка в inventory.json.
+LAST_SLUGS: tuple[str, ...] = ("igrushki", "usmanova")
+
+
 def load() -> list[Project]:
     path: Path = config.DOCS_DIR / "inventory.json"
     if not path.exists():
@@ -69,7 +73,15 @@ def load() -> list[Project]:
     for item in raw.get("projects", []):
         clean = {k: v for k, v in item.items() if k in known}
         projects.append(Project(**clean))
-    return projects
+
+    # Перестановка: хвостовые работы уходят вниз, номера пересчитываются,
+    # чтобы список шёл 01, 02, 03… сверху вниз без дыр в нумерации.
+    tail = [p for slug in LAST_SLUGS for p in projects if p.slug == slug]
+    head = [p for p in projects if p.slug not in LAST_SLUGS]
+    ordered = head + tail
+    for index, project in enumerate(ordered, start=1):
+        project.num = f"{index:02d}"
+    return ordered
 
 
 def by_slug(slug: str) -> Project | None:
