@@ -186,9 +186,9 @@ def create_app() -> FastAPI:
             return approval_bridge.MOUNTED
         return ok_paths.get(f"/p/{project.slug}/", False)
 
-    def _open_url(project: catalog.Project, host: str) -> str:
+    def _open_url(project: catalog.Project, host: str, scheme: str = "http") -> str:
         if project.stand and project.stand_port:
-            return f"http://{host}:{project.stand_port}{project.stand_path}"
+            return f"{scheme}://{host}:{project.stand_port}{project.stand_path}"
         if project.slug == "approval":
             return "/svc/approval/docs"
         return project.live or f"/p/{project.slug}/"
@@ -269,11 +269,12 @@ def create_app() -> FastAPI:
         project = next(p for p in projects if p.slug == slug)
 
         host = request.headers.get("host", "").split(":")[0] or "127.0.0.1"
+        scheme = request.url.scheme or "http"
         ctx = _context(request, projects, health)
         ctx.update(
             {
                 "p": project,
-                "open_url": _open_url(project, host),
+                "open_url": _open_url(project, host, scheme),
                 "unit": _unit(project),
             }
         )
